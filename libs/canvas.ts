@@ -12,7 +12,7 @@ import {
   RenderCanvas,
 } from "@/types/type";
 import { defaultNavElement } from "@/constants";
-import { createSpecificShape } from "./shapes";
+import { createSpecificShape } from "@/libs/shapes";
 
 export const initializeFabric = ({
   fabricRef,

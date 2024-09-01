@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { CursorChatProps, CursorMode } from "@/types/type";
 import CursorSVG from "@/public/assets/CursorSVG";
 
@@ -30,34 +30,6 @@ const CursorChat = ({
       });
     }
   };
-
-  useEffect(() => {
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key === "/") {
-        setCursorState({
-          mode: CursorMode.Chat,
-          previousMessage: null,
-          message: "",
-        });
-      } else if (e.key === "Escape") {
-        updateMyPresence({ message: "" });
-        setCursorState({ mode: CursorMode.Hidden });
-      }
-    };
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "/") {
-        e.preventDefault();
-      }
-    };
-    window.addEventListener("keyup", onKeyUp);
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("keyup", onKeyUp);
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [updateMyPresence]);
 
   return (
     <div

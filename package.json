@@ -12,6 +12,7 @@
     "@liveblocks/client": "^2.6.0",
     "@liveblocks/react": "^2.6.0",
     "@liveblocks/react-ui": "^2.6.0",
+    "@types/fabric": "^5.3.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "fabric": "^6.4.1",
