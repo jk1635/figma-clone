@@ -1,8 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import LiveCursors from "@/components/cursor/LiveCursors";
 import { useOthers } from "@liveblocks/react/suspense";
-import { useMyPresence } from "@liveblocks/react";
-import { CursorMode, CursorState, Reaction } from "@/types/type";
+import {
+  useBroadcastEvent,
+  useEventListener,
+  useMyPresence,
+} from "@liveblocks/react";
+import { CursorMode, CursorState, Reaction, ReactionEvent } from "@/types/type";
 import CursorChat from "@/components/cursor/CursorChat";
 import ReactionSelector from "@/components/reaction/ReactionSelector";
 import FlyingReaction from "@/components/reaction/FlyingReaction";
@@ -17,6 +21,14 @@ const Live = () => {
   });
 
   const [reaction, setReaction] = useState<Reaction[]>([]);
+
+  const broadcast = useBroadcastEvent();
+
+  useInterval(() => {
+    setReaction((reaction) =>
+      reaction.filter((r) => r.timestamp > Date.now() - 4000)
+    );
+  }, 1000);
 
   useInterval(() => {
     if (
@@ -33,8 +45,26 @@ const Live = () => {
           },
         ])
       );
+      broadcast({
+        x: cursor.x,
+        y: cursor.y,
+        value: cursorState.reaction,
+      });
     }
   }, 100);
+
+  useEventListener((eventData) => {
+    const event = eventData.event as ReactionEvent;
+    setReaction((reactions) =>
+      reactions.concat([
+        {
+          point: { x: event.x, y: event.y },
+          value: event.value,
+          timestamp: Date.now(),
+        },
+      ])
+    );
+  });
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     e.preventDefault();
@@ -129,13 +159,13 @@ const Live = () => {
     >
       <h1 className='text-2xl text-white'>Figma Clone</h1>
 
-      {reaction.map((reaction) => (
+      {reaction.map((r) => (
         <FlyingReaction
-          key={reaction.timestamp.toString()}
-          x={reaction.point.x}
-          y={reaction.point.y}
-          timestamp={reaction.timestamp}
-          value={reaction.value}
+          key={r.timestamp.toString()}
+          x={r.point.x}
+          y={r.point.y}
+          timestamp={r.timestamp}
+          value={r.value}
         />
       ))}
 
@@ -157,14 +187,3 @@ const Live = () => {
   );
 };
 export default Live;
-//     setCursorState((prevState) => {
-//       if (prevState.mode === CursorMode.Reaction) {
-//         return { ...prevState, isPressed: false };
-//       }
-//       return prevState;
-//     });
-//     console.log(cursorState.mode);
-//     console.log("cursorState", cursorState);
-//   },
-//   [cursorState.mode, setCursorState]
-// );
