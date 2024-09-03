@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useThreads } from "@/liveblocks.config";
+import { useThreads } from "@liveblocks/react";
 
 export const useMaxZIndex = () => {
   const { threads } = useThreads();

@@ -41,6 +41,7 @@ export const handleCanvasMouseDown = ({
   shapeRef,
 }: CanvasMouseDown) => {
   const pointer = canvas.getPointer(options.e);
+  console.log("pointer", pointer);
 
   const target = canvas.findTarget(options.e, false);
 
@@ -248,8 +249,11 @@ export const handleCanvasSelectionCreated = ({
       height: scaledHeight?.toFixed(0).toString() || "",
       fill: selectedElement?.fill?.toString() || "",
       stroke: selectedElement?.stroke || "",
+      // @ts-ignore
       fontSize: selectedElement?.fontSize || "",
+      // @ts-ignore
       fontFamily: selectedElement?.fontFamily || "",
+      // @ts-ignore
       fontWeight: selectedElement?.fontWeight || "",
     });
   }
