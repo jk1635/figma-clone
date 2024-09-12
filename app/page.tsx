@@ -6,11 +6,15 @@ import RightSidebar from "@/components/RightSidebar";
 import { useEffect, useRef, useState } from "react";
 import {
   handleCanvasMouseDown,
+  handleCanvasMouseMove,
+  handleCanvasMouseUp,
   handleResize,
   initializeFabric,
+  renderCanvas,
 } from "@/libs/canvas";
 import { fabric } from "fabric";
 import { ActiveElement } from "@/types/type";
+import { useMutation, useStorage } from "@liveblocks/react";
 
 export default function Page() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -18,6 +22,18 @@ export default function Page() {
   const isDrawing = useRef(false);
   const shapeRef = useRef<fabric.Object | null>(null);
   const selectedShapeRef = useRef<string | null>("rectangle");
+  const activeObjectRef = useRef<fabric.Object | null>(null);
+
+  const canvasObjects = useStorage((root) => root.canvasObjects);
+
+  const syncShapeInStorage = useMutation(({ storage }, object) => {
+    if (!object) return;
+    const { objectId } = object;
+    const shapeData = object.toJSON();
+    shapeData.objectId = objectId;
+    const canvasObjects = storage.get("canvasObjects");
+    canvasObjects.set(objectId, shapeData);
+  }, []);
 
   const [activeElement, setActiveElement] = useState<ActiveElement>({
     name: "",
@@ -27,8 +43,7 @@ export default function Page() {
 
   const handleActiveElement = (el) => {
     setActiveElement(el);
-
-    selectedShapeRef.current = el?.value;
+    selectedShapeRef.current = el?.value as string;
   };
 
   useEffect(() => {
@@ -44,10 +59,38 @@ export default function Page() {
       });
     });
 
+    canvas.on("mouse:move", (options) => {
+      handleCanvasMouseMove({
+        options,
+        canvas,
+        isDrawing,
+        shapeRef,
+        selectedShapeRef,
+        syncShapeInStorage,
+      });
+    });
+
+    canvas.on("mouse:up", () => {
+      handleCanvasMouseUp({
+        canvas,
+        isDrawing,
+        shapeRef,
+        selectedShapeRef,
+        syncShapeInStorage,
+        setActiveElement,
+        activeObjectRef,
+      });
+    });
+
     window.addEventListener("resize", () => {
       handleResize({ canvas: fabricRef.current });
     });
   }, []);
+
+  useEffect(() => {
+    if (canvasObjects)
+      renderCanvas({ fabricRef, canvasObjects, activeObjectRef });
+  }, [canvasObjects]);
 
   return (
     <main className='h-screen overflow-hidden'>

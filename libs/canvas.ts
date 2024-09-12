@@ -80,7 +80,7 @@ export const handleCanvasMouseDown = ({
   }
 };
 
-export const handleCanvaseMouseMove = ({
+export const handleCanvasMouseMove = ({
   options,
   canvas,
   isDrawing,
