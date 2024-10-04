@@ -8,7 +8,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const ShapesMenu = ({ item, activeElement, handleActiveElement }) => {
+import { ShapesMenuProps } from "@/types/type";
+
+const ShapesMenu = ({
+  item,
+  activeElement,
+  handleActiveElement,
+  handleImageUpload,
+  imageInputRef,
+}: ShapesMenuProps) => {
   const isDropdown = item.value.some((el) => el?.value === activeElement.value);
 
   return (
@@ -30,18 +38,18 @@ const ShapesMenu = ({ item, activeElement, handleActiveElement }) => {
 
         <DropdownMenuContent className='mt-5 flex flex-col gap-y-1 border-none bg-primary-black py-4 text-white'>
           {item.value.map((el) => (
-            <button
+            <Button
               key={el?.name}
               onClick={() => handleActiveElement(el)}
               className={`flex h-fit justify-between gap-10 rounded-none px-5 py-3 focus:border-none ${activeElement.value === el.value ? "bg-primary-green" : "hover:bg-primary-grey-200"}`}
             >
               <div className='group flex items-center gap-2'>
                 <Image
-                  src={el?.icon}
-                  alt={el?.name}
+                  src={el?.icon as string}
+                  alt={el?.name as string}
                   width={20}
                   height={20}
-                  className={activeElement.value === el.value ? "invert" : ""}
+                  className={activeElement.value === el?.value ? "invert" : ""}
                 />
                 <p
                   className={`text-sm ${activeElement.value === el?.value ? "text-primary-black" : "text-white"}`}
@@ -49,10 +57,18 @@ const ShapesMenu = ({ item, activeElement, handleActiveElement }) => {
                   {el?.name}
                 </p>
               </div>
-            </button>
+            </Button>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <input
+        type='file'
+        className='hidden'
+        ref={imageInputRef}
+        accept='image/*'
+        onChange={handleImageUpload}
+      />
     </>
   );
 };
