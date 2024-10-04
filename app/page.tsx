@@ -15,11 +15,14 @@ import {
 } from "@/libs/canvas";
 import { fabric } from "fabric";
 import { ActiveElement } from "@/types/type";
-import { useMutation, useStorage } from "@liveblocks/react";
+import { useMutation, useRedo, useStorage, useUndo } from "@liveblocks/react";
 import { defaultNavElement } from "@/constants";
-import { handleDelete } from "@/libs/key-events";
+import { handleDelete, handleKeyDown } from "@/libs/key-events";
 
 export default function Page() {
+  const undo = useUndo();
+  const redo = useRedo();
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fabricRef = useRef<fabric.Canvas | null>(null);
   const isDrawing = useRef(false);
@@ -67,7 +70,7 @@ export default function Page() {
     switch (el?.value) {
       case "reset":
         deleteAllShapes();
-        fabricRef.current?.clear();
+        (fabricRef.current as fabric.Canvas)?.clear();
         setActiveElement(defaultNavElement);
         break;
       case "delete":
@@ -84,7 +87,7 @@ export default function Page() {
   useEffect(() => {
     const canvas = initializeFabric({ canvasRef, fabricRef });
 
-    canvas.on("mouse:down", (options) => {
+    canvas.on("mouse:down", (options: any) => {
       handleCanvasMouseDown({
         options,
         canvas,
@@ -94,7 +97,7 @@ export default function Page() {
       });
     });
 
-    canvas.on("mouse:move", (options) => {
+    canvas.on("mouse:move", (options: any) => {
       handleCanvasMouseMove({
         options,
         canvas,
@@ -117,7 +120,7 @@ export default function Page() {
       });
     });
 
-    canvas.on("object:modified", (options) => {
+    canvas.on("object:modified", (options: any) => {
       handleCanvasObjectModified({
         options,
         syncShapeInStorage,
@@ -126,6 +129,17 @@ export default function Page() {
 
     window.addEventListener("resize", () => {
       handleResize({ canvas: fabricRef.current });
+    });
+
+    window.addEventListener("keydown", (e: any) => {
+      handleKeyDown({
+        e,
+        canvas: fabricRef.current,
+        undo,
+        redo,
+        syncShapeInStorage,
+        deleteShapeFromStorage,
+      });
     });
 
     return () => {
@@ -145,7 +159,7 @@ export default function Page() {
         handleActiveElement={handleActiveElement}
       />
       <section className='flex h-full flex-row'>
-        <LeftSidebar />
+        <LeftSidebar allShapes={Array.from(canvasObjects || [])} />
         <Live canvasRef={canvasRef} />
         <RightSidebar />
       </section>
