@@ -88,7 +88,6 @@ const Live = ({ canvasRef }: Props) => {
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
-      // e.preventDefault();
       e.stopPropagation();
       const x = e.clientX - e.currentTarget.getBoundingClientRect().x;
       const y = e.clientY - e.currentTarget.getBoundingClientRect().y;
@@ -161,7 +160,7 @@ const Live = ({ canvasRef }: Props) => {
       onPointerLeave={handlePointerLeave}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
-      className='flex h-[100vh] w-full items-center justify-center text-center'
+      className='relative flex h-full w-full flex-1 items-center justify-center'
     >
       <canvas ref={canvasRef} />
 

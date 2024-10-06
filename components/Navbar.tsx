@@ -5,7 +5,6 @@ import ActiveUsers from "@/components/users/ActiveUsers";
 import { navElements } from "@/constants";
 import ShapesMenu from "@/components/ShapesMenu";
 import { Button } from "@/components/ui/button";
-import NewThread from "@/components/comments/NewThread";
 
 const Navbar = ({
   activeElement,
@@ -41,16 +40,14 @@ const Navbar = ({
                 handleImageUpload={handleImageUpload}
               />
             ) : item?.value === "comments" ? (
-              <NewThread>
-                <Button className='relative h-5 w-5 object-contain'>
-                  <Image
-                    src={item.icon}
-                    alt={item.name}
-                    fill
-                    className={isActive(item.value) ? "invert" : ""}
-                  />
-                </Button>
-              </NewThread>
+              <Button className='relative h-5 w-5 object-contain'>
+                <Image
+                  src={item.icon}
+                  alt={item.name}
+                  fill
+                  className={isActive(item.value) ? "invert" : ""}
+                />
+              </Button>
             ) : (
               <Button className='relative h-5 w-5 object-contain'>
                 <Image
