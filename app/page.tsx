@@ -68,9 +68,9 @@ export default function Page() {
 
     if (!canvasObjects || canvasObjects.size === 0) return true;
 
-    for (const [key, value] of canvasObjects.entries()) {
+    canvasObjects.forEach((value, key) => {
       canvasObjects.delete(key);
-    }
+    });
 
     return canvasObjects.size === 0;
   }, []);
@@ -80,7 +80,7 @@ export default function Page() {
     canvasObjects.delete(objectId);
   }, []);
 
-  const handleActiveElement = (el) => {
+  const handleActiveElement = (el: any) => {
     setActiveElement(el);
 
     switch (el?.value) {

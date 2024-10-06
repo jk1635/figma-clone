@@ -9,7 +9,9 @@ declare global {
     // Each user's Presence, for useMyPresence, useOthers, etc.
     Presence: {
       cursor: { x: number; y: number } | null;
-      message: string | null;
+      cursorColor: string | null;
+      editingText: string | null;
+      message?: string;
     };
 
     // The Storage tree for the room, for useMutation, useStorage, etc.

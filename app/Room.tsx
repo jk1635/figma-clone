@@ -11,6 +11,7 @@ import Loading from "@/components/Loading";
 
 export function Room({ children }: { children: ReactNode }) {
   return (
+    // @ts-ignore
     <LiveblocksProvider
       publicApiKey={process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY}
     >

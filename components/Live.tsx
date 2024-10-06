@@ -95,7 +95,7 @@ const Live = ({ canvasRef, undo, redo }: CanvasProps) => {
   const handlePointerLeave = useCallback(
     (e: React.PointerEvent) => {
       setCursorState({ mode: CursorMode.Hidden });
-      updateMyPresence({ cursor: null, message: null });
+      updateMyPresence({ cursor: null, message: "" });
     },
     [updateMyPresence]
   );

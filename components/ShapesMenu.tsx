@@ -41,7 +41,7 @@ const ShapesMenu = ({
             <Button
               key={el?.name}
               onClick={() => handleActiveElement(el)}
-              className={`flex h-fit justify-between gap-10 rounded-none px-5 py-3 focus:border-none ${activeElement.value === el.value ? "bg-primary-green" : "hover:bg-primary-grey-200"}`}
+              className={`flex h-fit justify-between gap-10 rounded-none px-5 py-3 focus:border-none ${activeElement.value === el?.value ? "bg-primary-green" : "hover:bg-primary-grey-200"}`}
             >
               <div className='group flex items-center gap-2'>
                 <Image
